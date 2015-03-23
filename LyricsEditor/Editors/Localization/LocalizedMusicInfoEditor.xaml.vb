@@ -1,0 +1,3 @@
+﻿Class LocalizedMusicInfoEditor
+
+End Class

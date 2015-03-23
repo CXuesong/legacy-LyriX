@@ -1,0 +1,248 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="Common"
+    targetNamespace="LyriX/2011/package/common.xsd"
+    elementFormDefault="qualified"
+    xmlns="LyriX/2011/package/common.xsd"
+    xmlns:com="LyriX/2011/package/common.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xml:lang="zh-cn"
+>
+  <xs:annotation>
+    <xs:documentation>
+      <![CDATA[LyriX 架构的公用信息。]]>
+    </xs:documentation>
+  </xs:annotation>
+
+  <xs:simpleType name="partIndentifier">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[表示部分的标识。]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:nonNegativeInteger" />
+  </xs:simpleType>
+
+  <xs:simpleType name="lineIndentifier">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[用于歌词行或是行组的标识。]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:nonNegativeInteger" />
+  </xs:simpleType>
+  
+  <xs:simpleType name="spanIndentifier">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[用于歌词段的标识。]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:nonNegativeInteger" />
+  </xs:simpleType>
+  
+  <xs:simpleType name="artistIndentifier">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[歌曲艺术家或是群组的标识。]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:nonNegativeInteger" />
+  </xs:simpleType>
+
+  <xs:simpleType name="artistJob">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[表示歌曲作者的具体任务。]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="others">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[其它职务。]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="tuneComposition">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[作曲。]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="lyricsComposition">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[作词。]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="tunePerformance">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[演奏。]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="lyricsPerformance">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[演唱。]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="sex">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="male">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[男性。]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="female">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[女性。]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="language">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[用于表示区域或语言的标识符，其格式参见 UTS#35(2.0.1)：http://www.unicode.org/reports/tr35/tr35-21.html#Unicode_Language_and_Locale_Identifiers。 ]]>
+      </xs:documentation>
+    </xs:annotation>
+
+    <xs:restriction base="xs:token">
+      <!--
+      格式为 [language[-Script][-REGION][-variant]]
+                          (
+      language  语言      ([A-Za-z]{2,3}      ISO 639 语言标识符(language/extlang)
+                            |[A-Za-z]{4}      保留
+                            |[A-Za-z]{5,8})   其他 IANA 已注册的语言标识符
+      script    书写方式  (-[A-Za-z]{4})?
+      region    地区      (-[A-Za-z]{2}|[0-9]{3})?
+      variant   语言变体  (-[0-9A-Za-z]{5,8}        保留
+                            |[0-9][0-9A-Za-z]{3})?
+                          )?
+      UTS#35 使用了 BCP47(RFC5646) 中建议的语言标识格式。
+      具体情况参见 http://www.inter-locale.com/ID/rfc5646.html#syntax。
+      如果指定的语言为空（""），则表示默认区域性。
+      -->
+      <xs:pattern value="(([A-Za-z]{2,3}|[A-Za-z]{4}|[A-Za-z]{5,8})(-[A-Za-z]{4})?(-[A-Za-z]{2}|[0-9]{3})?(-[0-9A-Za-z]{5,8}|[0-9][0-9A-Za-z]{3})?)?" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- xs:complexType name="Ttags">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[用于表示一个元素的由应用程序定义的附加信息。]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:any namespace="##any" processContents="lax" />
+    </xs:choice>
+  </xs:complexType -->
+  
+  <xs:element name="tags">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[声明在打开文档时需要作为应用程序附加数据进行读取的 Xml 标记的命名空间。]]>
+      </xs:documentation>
+    </xs:annotation>
+
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="imports">
+          <xs:complexType>
+            <xs:attribute name="ns" type="xs:anyURI">
+              <xs:annotation>
+                <xs:documentation>
+                  <![CDATA[要导入作为附加数据的命名空间。]]>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  
+  <!--xs:element name="tags" type="Ttags" /-->
+  
+  <!--xs:complexType name="packagePartHead">
+    <xs:all>
+      <xs:element name="application" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[创建此部分的应用程序名称等信息。]]>
+          </xs:documentation>
+        </xs:annotation>
+
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:token">
+              <xs:attribute name="version" type="xs:token">
+                <xs:annotation>
+                  <xs:documentation>
+                    <![CDATA[应用程序版本。]]>
+                  </xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="author" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[作者的姓名等信息。]]>
+          </xs:documentation>
+        </xs:annotation>
+
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:normalizedString">
+              <xs:attribute name="contact" type="xs:normalizedString">
+                <xs:annotation>
+                  <xs:documentation>
+                    <![CDATA[作者的联系信息。]]>
+                  </xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="lastModifiedTime" type="xs:dateTime" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[此文件最后一次修改的时间。]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="comments" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[此文件作者留下的注释。]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="language" type="com:language" default="" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[此部分的语言。用于确定主体部分子元素的语言默认值，或是直接交换文件部分时使用的 URI。]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:all>
+  </xs:complexType-->
+  
+</xs:schema>

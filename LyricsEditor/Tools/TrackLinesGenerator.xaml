@@ -1,0 +1,37 @@
+﻿<local:DataContainerEditor x:Class="TrackLinesGenerator" x:TypeArguments="doc:Track"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:LyriX.LyricsEditor"
+      xmlns:doc="clr-namespace:LyriX.Document;assembly=LyriX"
+      xmlns:syscm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+      mc:Ignorable="d"
+      d:DesignHeight="350" d:DesignWidth="300" EditorTitle="插入行" DataContainerTitle="{Binding Path=Container}">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Button Content="创建行" Height="23" HorizontalAlignment="Right" Name="OKButton" VerticalAlignment="Center" Width="75" IsDefault="True" Grid.Row="2" />
+        <TextBlock Name="TextBlock1" Text="请在此处键入要插入的行的内容，按文本框中的行分隔。然后单击“创建行”以继续。每一个创建的歌词行中都会包含一个默认的段。届时请根据需要将段拆分。" VerticalAlignment="Top" TextWrapping="Wrap" />
+        <TextBox Grid.Row="1" Name="LinesTextBox" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Text="请在此处输入文本。" FontSize="14">
+            <TextBox.TextDecorations>
+                <TextDecoration Location="Baseline" PenOffset="1" PenOffsetUnit="Pixel">
+                    <TextDecoration.Pen>
+                        <Pen Brush="Navy">
+                            <Pen.DashStyle>
+                                <DashStyle Dashes="2,8" />
+                            </Pen.DashStyle>
+                        </Pen>
+                    </TextDecoration.Pen>
+                </TextDecoration>
+            </TextBox.TextDecorations>
+        </TextBox>
+        <StackPanel Grid.Row="2" HorizontalAlignment="Left">
+            <CheckBox Content="移除空行(_B)" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" Name="RemoveBlankLines" />
+            <CheckBox Content="移除行首尾空格(_S)" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" Name="TrimLines" IsChecked="True" />
+        </StackPanel>
+    </Grid>
+</local:DataContainerEditor>

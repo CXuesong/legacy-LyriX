@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema targetNamespace="LyriX/2011/package/localizedMusicInfo.xsd"
+    elementFormDefault="qualified"
+    xmlns="LyriX/2011/package/localizedMusicInfo.xsd"
+    xmlns:linf="LyriX/2011/package/localizedMusicInfo.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:com="LyriX/2011/package/common.xsd"
+    xmlns:inf="LyriX/2011/package/musicInfo.xsd"
+    xml:lang="zh-cn">
+
+  <xs:import namespace="LyriX/2011/package/common.xsd" />
+  <xs:import namespace="LyriX/2011/package/musicInfo.xsd" />
+
+  <xs:annotation>
+    <xs:documentation>
+      <![CDATA[按照某一语言进行翻译的音乐信息的架构。]]>
+    </xs:documentation>
+  </xs:annotation>
+
+  <xs:element name="localizedMusicInfo" type="body" />
+
+  <xs:complexType name="body">
+    <xs:all>
+      <xs:element ref="com:tags" minOccurs="0" />
+      <xs:element name="title" type="xs:normalizedString" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[标题。]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="album" type="xs:normalizedString" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[专辑/电影名称。]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="artists" type="artistCollection" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[参与创作的人员。]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:complexType name="artistCollection">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[表示艺术家的集合。]]>
+      </xs:documentation>
+    </xs:annotation>
+
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="artist">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[艺术家或是群组的名称以及其它与区域语言相关的信息。]]>
+          </xs:documentation>
+        </xs:annotation>
+
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:normalizedString">
+              <xs:attribute name="aid" type="com:artistIndentifier">
+                <xs:annotation>
+                  <xs:documentation>
+                    <![CDATA[在 musicInfo 中定义过的艺术家或是群组的标识。]]>
+                  </xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+              <xs:attributeGroup ref="inf:localizableArtistAttributes" />
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

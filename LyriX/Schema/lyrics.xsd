@@ -1,0 +1,283 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema targetNamespace="LyriX/2011/package/lyrics.xsd"
+    elementFormDefault="qualified"
+    xmlns="LyriX/2011/package/lyrics.xsd"
+    xmlns:lrc="LyriX/2011/package/lyrics.xsd"
+    xmlns:com="LyriX/2011/package/common.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xml:lang="zh-cn"
+>
+  <xs:import namespace="LyriX/2011/package/common.xsd" />
+
+  <xs:annotation>
+    <xs:documentation>
+      <![CDATA[歌词内容的架构。]]>
+    </xs:documentation>
+  </xs:annotation>
+
+  <xs:element name="lyrics" type="body" />
+
+  <xs:complexType name="body">
+    <xs:sequence>
+      <xs:element ref="com:tags" minOccurs="0" />
+      <xs:element name="version" type="Tversion" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[歌词的一个版本，如同一首歌可能存在长版与短版。]]>
+          </xs:documentation>
+        </xs:annotation>
+        <!-- 行与段的标识在全局是唯一的 -->
+        <xs:unique name="uniqueLineGroupId">
+          <xs:selector xpath=".//lrc:lineGroup" />
+          <xs:field xpath="@id" />
+        </xs:unique>
+        <xs:unique name="uniqueLineId">
+          <xs:selector xpath=".//lrc:line" />
+          <xs:field xpath="@id" />
+        </xs:unique>
+        <xs:unique name="uniqueSpanId">
+          <xs:selector xpath=".//lrc:span" />
+          <xs:field xpath="@id" />
+        </xs:unique>
+      </xs:element>
+    </xs:sequence>
+    <xs:attributeGroup ref="globalAttributes" />
+  </xs:complexType>
+
+  <xs:attributeGroup name="globalAttributes">
+    <xs:attribute name="language" type="com:language">
+      <xs:annotation>
+        <xs:documentation>
+          <![CDATA[此元素中歌词所使用的默认语言。]]>
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+
+  <xs:complexType name="Tversion">
+    <xs:sequence>
+      <xs:element name="track" type="Ttrack" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[歌词中的轨。不同的轨之间在同一时间段内可以重叠。]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="duration" type="xs:duration">
+      <xs:annotation>
+        <xs:documentation>
+          <![CDATA[此歌曲版本的持续时间。]]>
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="deviation" default="PT3S" type="xs:duration">
+      <xs:annotation>
+        <xs:documentation>
+          <![CDATA[在匹配歌曲版本的持续时间时允许的最大误差。]]>
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attributeGroup ref="globalAttributes" />
+  </xs:complexType>
+
+  <xs:complexType name="Ttrack">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <!--为了简化结构，只能先这样了……-->
+      <!--<xs:element ref="lineGroup" />-->
+      <xs:element ref="line" />
+    </xs:sequence>
+    <xs:attribute name="type" default="primary">
+      <xs:annotation>
+        <xs:documentation>
+          <![CDATA[此轨的类型。]]>
+        </xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="primary">
+            <xs:annotation>
+              <xs:documentation>
+                <![CDATA[主轨。]]>
+              </xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="accompany">
+            <xs:annotation>
+              <xs:documentation>
+                <![CDATA[伴唱轨。]]>
+              </xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="aids">
+      <xs:annotation>
+        <xs:documentation>
+          <![CDATA[此轨中所有行的歌词的共有演唱者列表。]]>
+        </xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:list itemType="com:artistIndentifier" />
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attributeGroup ref="globalAttributes" />
+  </xs:complexType>
+
+  <!--xs:complexType name="TlineGroup">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="line" type="Tline" />
+      <xs:element ref="com:tags" />
+    </xs:choice>
+    <xs:attribute name="id" type="com:lineIndentifier">
+      <xs:annotation>
+        <xs:documentation>
+          <![CDATA[确定行组的标识，以便于后期的引用。]]>
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ref" type="com:lineIndentifier">
+      <xs:annotation>
+        <xs:documentation>
+          <![CDATA[确定此行组引用目标。指定目标的信息将作为此元素内容的默认值。]]>
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="begin" type="xs:duration">
+      <xs:annotation>
+        <xs:documentation>
+          <![CDATA[在引用行组时，改变目标行组中按时间顺序第一个出现的段开始的时间，并将目标行组中的段的开始时间全部平移。]]>
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attributeGroup ref="globalAttributes" />
+  </xs:complexType-->
+
+  <xs:complexType name="Tline">
+    <xs:sequence>
+      <xs:element ref="span" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="id" type="com:lineIndentifier">
+      <xs:annotation>
+        <xs:documentation>
+          <![CDATA[确定行的标识，以便于后期的引用（如确定翻译）。]]>
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ref" type="com:lineIndentifier">
+      <xs:annotation>
+        <xs:documentation>
+          <![CDATA[确定此行引用目标。指定目标的信息（包括翻译）将作为此元素内容的默认值。]]>
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="begin" type="xs:duration">
+      <xs:annotation>
+        <xs:documentation>
+          <![CDATA[在引用行时，改变目标行中按时间顺序第一个出现的段开始的时间，并将目标行中的段的开始时间全部平移。]]>
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="aids">
+      <xs:annotation>
+        <xs:documentation>
+          <![CDATA[此行歌词的演唱者列表。]]>
+        </xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:list itemType="com:artistIndentifier" />
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attributeGroup ref="globalAttributes" />
+  </xs:complexType>
+
+  <xs:complexType name="Tspan">
+    <xs:sequence>
+      <xs:element ref="segment" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="id" type="com:spanIndentifier">
+      <xs:annotation>
+        <xs:documentation>
+          <![CDATA[确定段的标识，以便于后期的引用（如确定翻译）。]]>
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ref" type="com:spanIndentifier">
+      <xs:annotation>
+        <xs:documentation>
+          <![CDATA[确定此段引用目标，指定目标的信息（包括翻译）将作为元素内容的默认值。]]>
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="begin" type="xs:duration">
+      <xs:annotation>
+        <xs:documentation>
+          <![CDATA[段开始的时间。]]>
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="duration" type="xs:duration">
+      <xs:annotation>
+        <xs:documentation>
+          <![CDATA[段持续的时间。]]>
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attributeGroup ref="globalAttributes" />
+  </xs:complexType>
+
+  <xs:complexType name="Tsegment">
+    <xs:simpleContent>
+      <xs:extension base="xs:normalizedString">
+        <xs:attribute name="latinized" type="xs:normalizedString">
+          <xs:annotation>
+            <xs:documentation>
+              <![CDATA[此段歌词拼音文字的拉丁化表示形式（如汉语拼音，或是罗马音）。]]>
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="alphabetic" type="xs:normalizedString">
+          <xs:annotation>
+            <xs:documentation>
+              <![CDATA[此段歌词的本地拼音文字表示形式（如假名）。仅当 latinized 无法包含足够的信息时使用此属性。]]>
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attributeGroup ref="globalAttributes" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <!--xs:element name="lineGroup" type="TlineGroup">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[歌词中的行组，即几个联系较为紧密的行，其包含的行可以通过直接加入空格而合成为一行。请注意，在翻译时，每一行是分开进行翻译的。]]>
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element-->
+
+  <xs:element name="line" type="Tline">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[歌词中的一行。]]>
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="span" type="Tspan">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[歌词中的段。其中，“段”是按停顿、语速或是语言的变化而分隔出来的的词语、短语的整体或是其中的一部分，或是标点符号。]]>
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="segment" type="Tsegment">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[歌词的语义段，目前按拼音的标注需要进行人为划分，是歌词的最小部分。]]>
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+</xs:schema>

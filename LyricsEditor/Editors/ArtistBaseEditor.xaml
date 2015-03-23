@@ -1,0 +1,71 @@
+﻿<local:DataContainerEditor x:Class="ArtistBaseEditor" x:TypeArguments="doc:ArtistBase"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:LyriX.LyricsEditor"
+      xmlns:doc="clr-namespace:LyriX.Document;assembly=LyriX"
+      xmlns:LyriX="clr-namespace:LyriX;assembly=LyriX"
+      mc:Ignorable="d"
+      d:DesignHeight="350" d:DesignWidth="300" EditorTitle="艺术家/群组" DataContainerTitle="{Binding Path=Container}">
+    <local:DataContainerEditorBase.Resources>
+        <!-- 显式建立视图，以防筛选时因共用视图而发生混乱。 -->
+        <CollectionViewSource x:Key="ArtistsView" Source="{Binding Path=Document.Package.MusicInfo.Artists}" />
+    </local:DataContainerEditorBase.Resources>
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MaxWidth="80" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="标识ID：" TextAlignment="Right" VerticalAlignment="Center" />
+        <TextBox Grid.Column="1" Text="{Binding Path=Container.Id, Converter={StaticResource nvConverter}}" />
+        <TextBlock Text="名称：" Grid.Row="1" TextAlignment="Right" VerticalAlignment="Center" />
+        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Path=Container.Name}" />
+        <TextBlock Text="角色名称：" Grid.Row="2" TextAlignment="Right" VerticalAlignment="Center" />
+        <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Path=Container.CharacterName}" />
+        <TextBlock Text="担任职务：" Grid.Row="3" TextAlignment="Right" VerticalAlignment="Center" />
+        <ListBox Grid.Column="1" Grid.Row="3" Name="JobList" SelectionMode="Multiple" ItemTemplate="{StaticResource CheckBoxItemTemplate}" ItemsSource="{Binding Source={x:Type LyriX:ArtistJobs}, Converter={StaticResource evConverter}}">
+            <ListBox.Resources>
+                <DataTemplate DataType="{x:Type LyriX:ArtistJobs}">
+                    <TextBlock Text="{Binding Converter={StaticResource fnConverter}}" />
+                </DataTemplate>
+            </ListBox.Resources>
+        </ListBox>
+        <TabControl Grid.ColumnSpan="2" Grid.Row="6" Name="ExtraTab">
+            <TabItem Header="艺术家" Name="ArtistTab">
+                <Grid Margin="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" MaxWidth="80" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="性别：" TextAlignment="Right" VerticalAlignment="Center" />
+                    <RadioButton Content="未知" HorizontalAlignment="Left" Name="SexUnknownButton" Grid.ColumnSpan="1" Grid.Column="1" GroupName="Sex" />
+                    <RadioButton Content="男" HorizontalAlignment="Center" Name="SexMaleButton" Grid.Column="1" Grid.ColumnSpan="1" GroupName="Sex" />
+                    <RadioButton Content="女" HorizontalAlignment="Right" Name="SexFemaleButton" Grid.Column="1" Grid.ColumnSpan="1" GroupName="Sex" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="艺术家群组" Name="ArtistGroupTab">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="组内成员：" />
+                    <ListBox Name="GroupMemberList" Grid.Row="1" SelectionMode="Multiple" ItemTemplate="{StaticResource CheckBoxItemTemplate}" ItemsSource="{Binding Source={StaticResource ArtistsView}}" />
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</local:DataContainerEditor>

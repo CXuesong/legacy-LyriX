@@ -1,0 +1,45 @@
+﻿<local:DataContainerEditor x:Class="TrackEditor" x:TypeArguments="doc:Track"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:LyriX.LyricsEditor"
+      xmlns:doc="clr-namespace:LyriX.Document;assembly=LyriX"
+      mc:Ignorable="d"
+      d:DesignHeight="400" d:DesignWidth="400" EditorTitle="轨" DataContainerTitle="{Binding Path=Container}">
+    <local:DataContainerEditorBase.Resources>
+        <!-- 显式建立视图，以防筛选时因共用视图而发生混乱。 -->
+        <CollectionViewSource x:Key="ArtistsView" Source="{Binding Path=Document.Package.MusicInfo.Artists}" />
+    </local:DataContainerEditorBase.Resources>
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MaxWidth="60" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="3*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="语言：" TextAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Center" />
+        <TextBox DataContext="{Binding Path=Container.Language, Mode=TwoWay}" Style="{StaticResource NullableField}" Grid.Column="1" />
+        <TextBlock Text="演唱者（共有）：" TextAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Center" Grid.Row="1" />
+        <ListBox ItemTemplate="{StaticResource CheckBoxItemTemplate}" ItemsSource="{Binding Source={StaticResource ArtistsView}}" Name="ArtistsList" SelectionMode="Multiple" Grid.Column="1" Grid.Row="1" />
+        <ListView  Grid.Column="1" Grid.Row="2" ItemsSource="{Binding Path=Container.Lines}" Name="LineList">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Path=Id}" />
+                    <GridViewColumn DisplayMemberBinding="{Binding}" Header="内容" />
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Language, Converter={StaticResource nvConverter}}" Header="语言" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <local:ListEditor Grid.Column="1" Grid.Row="3" x:Name="LineEditor" View="{Binding ElementName=LineList}" />
+        <TextBlock Text="行：" TextAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Center" Grid.Row="2" Grid.RowSpan="2" />
+        <TextBlock Grid.Column="1" Grid.Row="4" HorizontalAlignment="Right">
+            <Hyperlink Name="AddLinesLink">批量添加行...</Hyperlink>
+        </TextBlock>
+    </Grid>
+</local:DataContainerEditor>

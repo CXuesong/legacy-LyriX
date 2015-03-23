@@ -1,0 +1,110 @@
+﻿<local:DataContainerEditor x:Class="LocalizedPackagePartsEditor" x:TypeArguments="doc:LocalizedPackageParts"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:LyriX.LyricsEditor"
+      xmlns:doc="clr-namespace:LyriX.Document;assembly=LyriX"
+      mc:Ignorable="d"
+      d:DesignHeight="400" d:DesignWidth="300" EditorTitle="本地化" DataContainerTitle="{Binding Path=Container.Language}">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MaxWidth="150" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Text="本地化语言：" TextAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Center" />
+        <TextBox Text="{Binding Path=Container.Language}" Grid.Column="1" />
+        <GroupBox Grid.ColumnSpan="2" Grid.Row="1">
+            <GroupBox.Header>
+                <TextBlock><Run Text="歌曲信息　" /><Hyperlink Click="Hyperlinks_Click" Tag="i">编辑</Hyperlink></TextBlock>
+            </GroupBox.Header>
+            <Grid DataContext="{Binding Path=Container.MusicInfo}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" MaxWidth="100" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="专辑：" TextAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Center" Grid.RowSpan="2" />
+                <TextBlock Grid.Column="1" Text="{Binding Path=Source.Album}" Style="{StaticResource UnlocalizedField}" />
+                <TextBlock Grid.Column="1" Text="{Binding Path=Album}" Grid.Row="1" />
+                <TextBlock Text="标题：" TextAlignment="Right" TextWrapping="Wrap" Grid.Row="2" VerticalAlignment="Center" Grid.RowSpan="2" />
+                <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding Path=Source.Title}" Style="{StaticResource UnlocalizedField}" />
+                <TextBlock Grid.Column="1" Text="{Binding Path=Title}" Grid.Row="3" />
+                <TextBlock Text="本地化的艺术家：" TextWrapping="Wrap" Grid.Row="5" VerticalAlignment="Center" TextAlignment="Right" />
+                <ListView Grid.Column="1" Grid.Row="5" ItemsSource="{Binding Path=Artists}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="名称">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Source.Name}" Style="{StaticResource UnlocalizedField}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=Name}" Header="名称" />
+                            <GridViewColumn Header="角色名称">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Source.CharacterName}" Style="{StaticResource UnlocalizedField}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=CharacterName}" Header="角色名称" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.ColumnSpan="2" Grid.Row="2">
+            <GroupBox.Header>
+                <TextBlock><Run Text="歌词信息　" /><Hyperlink Click="Hyperlinks_Click" Tag="l">编辑</Hyperlink></TextBlock>
+            </GroupBox.Header>
+            <Grid DataContext="{Binding Path=Container.Lyrics}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" MaxWidth="100" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="本地化的行：" TextAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Center" />
+                <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Grid.Column="1" Text="{Binding Path=Lines.Count}" />
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.ColumnSpan="2" Grid.Row="3" Header="同步选项" >
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock TextWrapping="Wrap">
+                    <Run>　　您可以选择将此语言</Run>
+                    <Run Text="{Binding Path=Container.Language}" />
+                    <Run>的本地化信息中的列表（如本地化的艺术家信息列表）和与之对应的、尚未本地化的信息（源）中的列表（如上层的“音乐信息”中的艺术家列表）进行</Run>
+                    <Hyperlink Click="Hyperlinks_Click" Tag="al">同步</Hyperlink>
+                    <Run>（包括添加与删除）；或是在同步操作中选择将源中存在而此处尚未收录的项目</Run>
+                    <Hyperlink Click="Hyperlinks_Click" Tag="ad">添加</Hyperlink>
+                    <Run>到列表中，也可以选择将此处已经失效的本地化信息</Run>
+                    <Hyperlink Click="Hyperlinks_Click" Tag="re">移除</Hyperlink>
+                    <Run>。</Run>
+                    <LineBreak />
+                    <Image Source="/LyricsEditor;component/Images/warning.png" Width="16" />
+                    <Bold>注意：这些操作都是不可逆的。</Bold>
+                </TextBlock>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</local:DataContainerEditor>

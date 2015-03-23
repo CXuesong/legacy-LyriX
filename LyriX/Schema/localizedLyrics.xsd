@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="LocalizedLyrics"
+    targetNamespace="LyriX/2011/package/localizedLyrics.xsd"
+    elementFormDefault="qualified"
+    xmlns="LyriX/2011/package/localizedLyrics.xsd"
+    xmlns:llrc="LyriX/2011/package/localizedLyrics.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:com="LyriX/2011/package/common.xsd"
+    xml:lang="zh-cn">
+  <xs:import namespace="LyriX/2011/package/common.xsd" />
+
+  <xs:annotation>
+    <xs:documentation>
+      <![CDATA[按照某一特定语言进行翻译的歌词。]]>
+    </xs:documentation>
+  </xs:annotation>
+
+  <xs:element name="localizedLyrics" type="body" />
+
+  <xs:complexType name="body">
+    <xs:all>
+      <xs:element ref="com:tags" minOccurs="0" />
+      <xs:element name="lines" type="lineCollection" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[已翻译的歌词行的集合。]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:complexType name="lineCollection">
+    <xs:sequence>
+      <xs:element name="line" type="TLine" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[已翻译的歌词行。]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="TLine">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="lid" type="com:lineIndentifier">
+          <xs:annotation>
+            <xs:documentation>
+              <![CDATA[要进行翻译的行的标识符。]]>
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+</xs:schema>

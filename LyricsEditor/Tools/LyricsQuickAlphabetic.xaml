@@ -1,0 +1,32 @@
+﻿<local:DataContainerEditor x:Class="LyricsQuickAlphabetic" x:TypeArguments="doc:Lyrics"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:LyriX.LyricsEditor"
+      xmlns:doc="clr-namespace:LyriX.Document;assembly=LyriX"
+      mc:Ignorable="d"
+      d:DesignHeight="350" d:DesignWidth="300" EditorTitle="快速注音">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock TextWrapping="Wrap">
+            <Run Text="以下列出了出现在此文档中的所有语义段，您可以统一为其标注拼音，然后点击“应用”即可。[未指定]的字段将不会被设置（即使您已经指定了“覆盖已有的语义段设置”也是这样）。" />
+            <LineBreak />
+            <Run Text="“覆盖已有的语义段设置”可以将所有指定内容的语义段的参数都设置为此处指定的内容；否则只会覆盖空（空或[未指定]）字段。" />
+        </TextBlock>
+        <DataGrid AutoGenerateColumns="False" Grid.Row="1" Name="STGrid">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Path=Text, Converter={StaticResource nvConverter}}" Header="内容" IsReadOnly="True" />
+                <DataGridTextColumn Binding="{Binding Path=Latinized, Converter={StaticResource nvConverter}}" Header="拉丁化" />
+                <DataGridTextColumn Binding="{Binding Path=Alphabetic, Converter={StaticResource nvConverter}}" Header="本地拼音" />
+                <DataGridTextColumn Binding="{Binding Path=Language, Converter={StaticResource nvConverter}}" Header="语言" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <CheckBox Content="覆盖已有的语义段设置(_R)" Grid.Row="2" HorizontalAlignment="Left" Name="OverridesValuesCheck" VerticalAlignment="Center" />
+        <Button Content="应用(_A)" Grid.Row="2" Height="23" HorizontalAlignment="Right" Name="ApplyButton" VerticalAlignment="Top" Width="75" />
+    </Grid>
+</local:DataContainerEditor>

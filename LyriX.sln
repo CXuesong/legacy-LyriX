@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "LyricsEditor", "LyricsEditor\LyricsEditor.vbproj", "{62C529F3-2CF0-4406-A516-09A1551F36BB}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "LyriX", "LyriX\LyriX.vbproj", "{FCC1A860-F5C1-4008-9022-72C0EA2C452F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AD4AAC68-84B0-4648-B952-ACF1087A90F3}"
+	ProjectSection(SolutionItems) = preProject
+		Local.testsettings = Local.testsettings
+		LyriX.vsmdi = LyriX.vsmdi
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+	EndProjectSection
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PlayersUI", "PlayersUI\PlayersUI.vbproj", "{819A1AF8-8549-4573-B281-4A6500B1C656}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DocumentViewModel", "DocumentViewModel\DocumentViewModel.vbproj", "{1FEAE4BA-FD83-4B29-A0EF-ED7D4D22092C}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "TestProject1", "TestProject1\TestProject1.vbproj", "{1013597F-1E04-4855-BA73-6AE1C5BB7CE0}"
+EndProject
+Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = LyriX.vsmdi
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{62C529F3-2CF0-4406-A516-09A1551F36BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62C529F3-2CF0-4406-A516-09A1551F36BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62C529F3-2CF0-4406-A516-09A1551F36BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62C529F3-2CF0-4406-A516-09A1551F36BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCC1A860-F5C1-4008-9022-72C0EA2C452F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCC1A860-F5C1-4008-9022-72C0EA2C452F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCC1A860-F5C1-4008-9022-72C0EA2C452F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCC1A860-F5C1-4008-9022-72C0EA2C452F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{819A1AF8-8549-4573-B281-4A6500B1C656}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{819A1AF8-8549-4573-B281-4A6500B1C656}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{819A1AF8-8549-4573-B281-4A6500B1C656}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{819A1AF8-8549-4573-B281-4A6500B1C656}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FEAE4BA-FD83-4B29-A0EF-ED7D4D22092C}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{1FEAE4BA-FD83-4B29-A0EF-ED7D4D22092C}.Debug|Any CPU.Build.0 = Release|Any CPU
+		{1FEAE4BA-FD83-4B29-A0EF-ED7D4D22092C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FEAE4BA-FD83-4B29-A0EF-ED7D4D22092C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1013597F-1E04-4855-BA73-6AE1C5BB7CE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1013597F-1E04-4855-BA73-6AE1C5BB7CE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1013597F-1E04-4855-BA73-6AE1C5BB7CE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1013597F-1E04-4855-BA73-6AE1C5BB7CE0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+EndGlobal

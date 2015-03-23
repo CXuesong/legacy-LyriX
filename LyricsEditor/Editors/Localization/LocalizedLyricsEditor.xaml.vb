@@ -1,0 +1,3 @@
+﻿Class LocalizedLyricsEditor
+
+End Class

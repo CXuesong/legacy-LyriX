@@ -1,0 +1,46 @@
+﻿<ToolBar x:Class="ListEditor"
+             x:ClassModifier="Friend"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="350" Name="ListEditor">
+    <ToolBar.Resources>
+        <RotateTransform x:Key="Rotate90" Angle="90" />
+    </ToolBar.Resources>
+    <ToolBar.Header>
+        <TextBlock VerticalAlignment="Center">
+            <Run>总项数：</Run><Run Text="{Binding ElementName=ListEditor, Path=View.ItemsSource.Count, Mode=OneWay}" /><Run>（</Run><Run Text="{Binding ElementName=ListEditor, Path=View.Items.Count, Mode=OneWay}" /><Run>）</Run></TextBlock>
+    </ToolBar.Header>
+    <Separator />
+    <Button Name="EditButton" ToolTip="编辑" Height="23" Style="{StaticResource tb}">
+        <Image Source="/LyricsEditor;component/Images/edit.png" />
+    </Button>
+    <Button Name="AddButton" ToolTip="添加" Height="23" Style="{StaticResource tb}">
+        <Image Source="/LyricsEditor;component/Images/add.png" />
+    </Button>
+    <Button Content="插入" Name="InsertButton" Style="{StaticResource tb}" />
+    <Button Name="RemoveButton" ToolTip="移除" Height="23" Style="{StaticResource tb}">
+        <Image Source="/LyricsEditor;component/Images/delete.png" />
+    </Button>
+    <Separator />
+    <Button Height="23" ToolTip="剪切" Name="CutButton" Style="{StaticResource tb}">
+        <Image Source="/LyricsEditor;component/Images/CutHS.png" />
+    </Button>
+    <Button Height="23" ToolTip="复制" Name="CopyButton" Style="{StaticResource tb}">
+        <Image Source="/LyricsEditor;component/Images/CopyHS.png" />
+    </Button>
+    <Button Height="23" ToolTip="粘贴" Name="PasteButton" Style="{StaticResource tb}">
+        <Image Source="/LyricsEditor;component/Images/PasteHS.png" />
+    </Button>
+    <Separator />
+    <Button Content="全选" Name="SelectAllButton" Style="{StaticResource tb}" />
+    <Separator />
+    <Button Height="23" Name="MoveUpButton" ToolTip="上移" Style="{StaticResource tb}">
+        <Image Source="/LyricsEditor;component/Images/MovePreviousHS.png" RenderTransformOrigin="0.5,0.5" RenderTransform="{StaticResource Rotate90}" />
+    </Button>
+    <Button Height="23" Name="MoveDownButton" ToolTip="下移" Style="{StaticResource tb}">
+        <Image Source="/LyricsEditor;component/Images/MoveNextHS.png" RenderTransformOrigin="0.5,0.5" RenderTransform="{StaticResource Rotate90}" />
+    </Button>
+</ToolBar>

@@ -1,0 +1,39 @@
+﻿<local:DataContainerEditor x:Class="LocalizedMusicInfoEditor" x:TypeArguments="doc:LocalizedMusicInfo"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:LyriX.LyricsEditor"
+      xmlns:doc="clr-namespace:LyriX.Document;assembly=LyriX"
+      mc:Ignorable="d"
+      d:DesignHeight="350" d:DesignWidth="300" EditorTitle="歌曲信息（本地化）" DataContainerTitle="{Binding Path=Container.Parent.Language}">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MaxWidth="100" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Text="专辑：" TextAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Center" Grid.RowSpan="2" />
+        <TextBlock Grid.Column="1" Text="{Binding Path=Container.Source.Album}" Style="{StaticResource UnlocalizedField}" />
+        <TextBox Grid.Column="1" Text="{Binding Path=Container.Album}" Grid.Row="1" />
+        <TextBlock Text="标题：" TextAlignment="Right" TextWrapping="Wrap" Grid.Row="2" VerticalAlignment="Center" Grid.RowSpan="2" />
+        <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding Path=Container.Source.Title}" Style="{StaticResource UnlocalizedField}" />
+        <TextBox Grid.Column="1" Text="{Binding Path=Container.Title}" Grid.Row="3" />
+        <TextBlock Text="艺术家（本地化）：" TextAlignment="Right" TextWrapping="Wrap" Grid.Row="4" VerticalAlignment="Center" />
+        <DataGrid AutoGenerateColumns="False" Grid.Column="1" Grid.Row="4" Name="DataGrid1" ItemsSource="{Binding Path=Container.Artists}" Style="{StaticResource DataContainerGrid}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Path=SourceId}" Header="标识ID" />
+                <DataGridTextColumn Binding="{Binding Path=Source.Name}" Header="名称" IsReadOnly="True" CellStyle="{StaticResource UnlocalizedField}" />
+                <DataGridTextColumn Binding="{Binding Path=Name, Converter={StaticResource nvConverter}}" Header="名称" />
+                <DataGridTextColumn Binding="{Binding Path=Source.CharacterName}" Header="角色名称" IsReadOnly="True"  CellStyle="{StaticResource UnlocalizedField}" />
+                <DataGridTextColumn Binding="{Binding Path=CharacterName, Converter={StaticResource nvConverter}}" Header="角色名称" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</local:DataContainerEditor>

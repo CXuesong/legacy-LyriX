@@ -1,0 +1,23 @@
+﻿<Window x:Class="GenreDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="流派" Height="400" Width="300" WindowStartupLocation="CenterOwner" MinHeight="100" MinWidth="100">
+    <Grid Margin="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="234*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Label Content="请在此处键入流派名称(_N)：" Height="28" HorizontalAlignment="Left" Margin="12,12,0,0" Name="Label1" VerticalAlignment="Top" Target="{Binding ElementName=GenreBox}" />
+        <TextBox Height="23" Margin="12,40,12,0" Name="GenreBox" VerticalAlignment="Top" />
+        <Label Content="或从列表中选择一项(_L)：" Height="28" HorizontalAlignment="Left" Margin="12,68,0,0" Name="Label2" VerticalAlignment="Top" Target="{Binding ElementName=GenreList}" />
+        <ListBox Margin="12,94,12,6" Name="GenreList" ItemsSource="{Binding Source={StaticResource GenresProvider}, XPath=genres/genre}">
+        </ListBox>
+        <Button Content="确定" Grid.Row="1" Height="23" HorizontalAlignment="Right" Margin="0,0,81,0" Name="OKButton" VerticalAlignment="Top" Width="75" IsDefault="True" />
+        <Button Content="取消" Height="23" HorizontalAlignment="Right" Name="CancelButton" VerticalAlignment="Top" Width="75" Grid.Row="1" IsCancel="True" />
+        <Button Height="23" HorizontalAlignment="Right" Margin="0,40,12,0" Name="ClearButton" VerticalAlignment="Top" ToolTip="清空输入">
+            <Button.Content>
+                <Image Source="/LyricsEditor;component/Images/delete.png" />
+            </Button.Content>
+        </Button>
+    </Grid>
+</Window>

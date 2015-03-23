@@ -1,0 +1,131 @@
+﻿<local:DataContainerEditor x:Class="VersionTimeAdjuster2" x:TypeArguments="doc:Version"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:LyriX.LyricsEditor"
+      xmlns:doc="clr-namespace:LyriX.Document;assembly=LyriX"
+      mc:Ignorable="d" EditorTitle="时间校准-面板" DataContainerTitle="{Binding Path=Container.Duration}" d:DesignHeight="400" d:DesignWidth="400">
+    <Page.Resources>
+        <BitmapImage x:Key="PlayImage" UriSource="/PlayersUI;component/Images/PlayHS.png" />
+        <BitmapImage x:Key="PauseImage" UriSource="/PlayersUI;component/Images/PauseHS.png" />
+    </Page.Resources>
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <MediaElement Name="MusicPlayer" Visibility="Collapsed" LoadedBehavior="Manual" Grid.RowSpan="3" Volume="0.7" Grid.ColumnSpan="2" />
+        <Slider Height="23" Name="PositionSlider" VerticalAlignment="Center" Margin="4,4,0,4" IsEnabled="False" Minimum="0" Grid.Row="2" TickFrequency="60000" TickPlacement="TopLeft" SmallChange="1000" LargeChange="10000" />
+        <TextBlock Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" TextAlignment="Right">
+            <Run Text="..." Name="PositionLabel" />
+            <Run Text="/" />
+            <Run Text="..." Name="DurationLabel" />
+        </TextBlock>
+        <Grid Grid.Row="3" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ToggleButton Height="30" HorizontalAlignment="Left" Name="PlayButton" VerticalAlignment="Center" Width="30" ToolTip="播放/暂停(5)" IsEnabled="False">
+                <Image Name="PlayButtonImage" Source="{StaticResource PlayImage}" />
+            </ToggleButton>
+            <Button Height="23" HorizontalAlignment="Right" Name="StopButton" VerticalAlignment="Center" Width="23" ToolTip="停止" IsEnabled="False" Grid.Column="1" Margin="0,4">
+                <Image Source="/PlayersUI;component/Images/StopHS.png" />
+            </Button>
+            <Slider Height="23" HorizontalAlignment="Right" Name="VolumeSlider" Width="70" VerticalAlignment="Center" Minimum="0" Maximum="1" SmallChange="0.05" LargeChange="0.1" Value="{Binding Path=Volume, ElementName=MusicPlayer}" TickFrequency="0.1" TickPlacement="BottomRight" ToolTip="音量" Grid.Column="8" Margin="0,4" />
+            <ToggleButton Height="23" HorizontalAlignment="Left" Name="MuteButton" VerticalAlignment="Center" Width="20" IsChecked="{Binding Path=IsMuted, ElementName=MusicPlayer}" ToolTip="静音" Grid.Column="7" Margin="0,4">
+                <Image Source="/PlayersUI;component/Images/AudioHS.png" />
+            </ToggleButton>
+            <ToggleButton Grid.Column="3" Content="0.5x" ToolTip="临时以 0.5x 的速率播放（小数点键）" Height="23" Name="SpeedSlowButton" />
+            <Slider Grid.Column="4" VerticalAlignment="Center" TickPlacement="TopLeft" Maximum="2" Ticks="0,0.25,0.5,0.6,0.7,0.8,0.9,0.95,1,1.05,1.1,1.2,1.3,1.4,1.5,1.75,2" SmallChange="0.05" LargeChange="0.25" Value="{Binding Path=SpeedRatio, ElementName=MusicPlayer}" Name="SpeedRatioSlider" IsSnapToTickEnabled="True" />
+            <TextBlock Grid.Column="5" Height="23" HorizontalAlignment="Left" Margin="0,4,0,0" VerticalAlignment="Top">
+                <Run Text="{Binding Path=Value, ElementName=SpeedRatioSlider, Mode=OneWay, StringFormat=f2}" /><Run Text="x" />
+            </TextBlock>
+        </Grid>
+        <Grid Margin="5" Grid.Row="4" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="128*" />
+            </Grid.RowDefinitions>
+            <ScrollViewer Grid.Row="1" FocusManager.IsFocusScope="True" VerticalScrollBarVisibility="Auto" Name="AdjustingViewer">
+                <ItemsControl Name="AdjustingList" FontSize="16">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ListBox x:Name="SpansList" BorderThickness="0" ItemsSource="{Binding Path=Line.Spans}" SelectedIndex="{Binding Path=SelectedSpanIndex}" SelectionChanged="SpansList_SelectionChanged" PreviewMouseDoubleClick="SpansList_PreviewMouseDoubleClick" PreviewKeyDown="SpansList_PreviewKeyDown">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                            </ListBox>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <ToolBarTray>
+                <ToolBar Header="校准">
+                    <Button Name="StartButton" Height="23" Style="{StaticResource tb}">
+                        <TextBlock ToolTip="开始播放，并定位至第一段。">
+                        <Image Source="{StaticResource PlayImage}" />
+                        <Run Text="开始校准(空格键)" BaselineAlignment="Center" />
+                        </TextBlock>
+                    </Button>
+                    <Separator />
+                    <Button Name="AdjustAllButton" Content="结束+开始(2)" Height="23" Style="{StaticResource tb}" ToolTip="设置当前段的结束时间和下一段的开始时间。" />
+                    <Button Name="AdjustBeginButton" Content="开始(1)" Height="23" Style="{StaticResource tb}" ToolTip="设置当前段的开始时间。" />
+                    <Button Name="AdjustEndButton" Content="结束(3)" Height="23" Style="{StaticResource tb}" ToolTip="设置当前段的结束时间，并移至下一段。" />
+                    <Button Name="SkipButton" Content="跳过(0)" Height="23" Style="{StaticResource tb}" ToolTip="跳过当前段。" />
+                </ToolBar>
+                <ToolBar Band="2" Header="段">
+                    <CheckBox Name="MergeSpansButton" Content="合并段(Shift)" />
+                    <CheckBox Name="SplitSpanButton" Content="拆分段(Ctrl)" />
+                </ToolBar>
+                <ToolBar Band="3" Header="时间">
+                    <TextBox Name="SpanBeginTimeBox" ToolTip="段的起始时间，可在此处点击后使用小键盘的+/-进行微调。完成后按回车键确认。" />
+                    <Label Content="+" />
+                    <TextBox Name="SpanDuraionTimeBox" ToolTip="段的持续时间，可在此处点击后使用小键盘的+/-进行微调。完成后按回车键确认。" FontSize="10" IsEnabled="False" />
+                    <Label Content="=" />
+                    <TextBox Name="SpanEndTimeBox" ToolTip="段的结束时间，可在此处点击后使用小键盘的+/-进行微调。完成后按回车键确认。" />
+                    <Separator />
+                    <Label Content="微调" />
+                    <TextBox Name="SpanAdjustmentBox" ToolTip="段时间微调的幅度。" Text="00:00:00.1" />
+                </ToolBar>
+            </ToolBarTray>
+            <Popup Name="SSLPopup" Placement="Absolute" Visibility="Collapsed" >
+                <TextBox Name="SpanSplitLocator" Style="{StaticResource SpanSplitLocator}" />
+            </Popup>
+            <Popup Name="SMSPopup" Placement="Absolute" Visibility="Collapsed">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <ListBox Name="SpansMergeSelector" SelectionMode="Multiple">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                    </ListBox>
+                    <Button Name="MergeSpansApplyButton" Content="合并(回车键)" Grid.Column="1" />
+                </Grid>
+            </Popup>
+        </Grid>
+        <TextBlock Grid.Row="1" Name="TextBlock1" Text="　　您可以使用小键盘的快捷键（标注在按钮或是工具提示中）来提高效率。完成后，请点击保存，然后返回即可。" TextWrapping="Wrap" Grid.ColumnSpan="2" />
+    </Grid>
+</local:DataContainerEditor>

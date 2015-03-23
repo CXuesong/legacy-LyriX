@@ -1,0 +1,156 @@
+﻿<Window x:Class="LyriXPackageView" x:ClassModifier="Friend"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:LyriX.LyricsEditor"
+    xmlns:doc="clr-namespace:LyriX.Document;assembly=LyriX"
+    xmlns:docm="clr-namespace:LyriX.Document.ObjectModel;assembly=LyriX"
+    xmlns:utl="clr-namespace:LyriX.Utility;assembly=LyriX"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    Height="600" Width="700" ResizeMode="CanResizeWithGrip" MinHeight="200" MinWidth="300">
+    <Window.Resources>
+        <Style x:Key="ItemType" TargetType="Run">
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+    </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.New" CanExecute="DocumentCommands_CanExecute" Executed="DocumentCommands_Executed" />
+        <CommandBinding Command="ApplicationCommands.Open" CanExecute="DocumentCommands_CanExecute" Executed="DocumentCommands_Executed" />
+        <CommandBinding Command="ApplicationCommands.Save" CanExecute="DocumentCommands_CanExecute" Executed="DocumentCommands_Executed" />
+        <CommandBinding Command="ApplicationCommands.SaveAs" CanExecute="DocumentCommands_CanExecute" Executed="DocumentCommands_Executed" />
+        <CommandBinding Command="ApplicationCommands.Close" CanExecute="DocumentCommands_CanExecute" Executed="DocumentCommands_Executed" />
+        <CommandBinding Command="{x:Static local:EditorCommands.NewWindow}" CanExecute="DocumentCommands_CanExecute" Executed="DocumentCommands_Executed" />
+        <CommandBinding Command="{x:Static local:EditorCommands.CheckDocument}" CanExecute="DocumentCommands_CanExecute" Executed="DocumentCommands_Executed" />
+        <CommandBinding Command="{x:Static local:EditorCommands.Exit}" CanExecute="WindowCommands_CanExecute" Executed="WindowCommands_Executed" />
+        <CommandBinding Command="{x:Static local:EditorCommands.About}" CanExecute="WindowCommands_CanExecute" Executed="WindowCommands_Executed" />
+    </Window.CommandBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="470*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TreeView Name="PackageOutline" Grid.RowSpan="2">
+                <TreeView.Resources>
+                    <!-- * -->
+                    <Style x:Key="ModifiedMark" TargetType="Run">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=Tag.IsModified}" Value="True">
+                                <Setter Property="Text" Value="*" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                    <Style TargetType="TreeViewItem">
+                        <!-- 将树状列表的项特性绑定到文档模型上 -->
+                        <Setter Property="DataContext" Value="{Binding RelativeSource={RelativeSource Self},Path=Header}" />
+                    </Style>
+                    <DataTemplate DataType="{x:Type doc:Header}">
+                        <TextBlock>
+                            <Run Text="{Binding Converter={StaticResource fnConverter},Mode=OneWay}" Style="{StaticResource ItemType}"/><Run Style="{StaticResource ModifiedMark}" />
+                            <Run Text="{Binding Path=AuthorName, Mode=OneWay}" />
+                            <Run Text="{Binding Path=AuthorContact, Mode=OneWay}" />
+                        </TextBlock>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type doc:MusicInfo}">
+                        <TextBlock>
+                            <Run Text="{Binding Converter={StaticResource fnConverter},Mode=OneWay}" Style="{StaticResource ItemType}" /><Run Style="{StaticResource ModifiedMark}" />
+                            <Run Text="{Binding Path=Title, Mode=OneWay}" />
+                            <Run Text="[" /><Run Text="{Binding Path=Album, Mode=OneWay}" /><Run Text="]" />
+                        </TextBlock>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type doc:ArtistBase}">
+                        <TextBlock>
+                            <Run Text="{Binding Converter={StaticResource fnConverter},Mode=OneWay}" Style="{StaticResource ItemType}" /><Run Style="{StaticResource ModifiedMark}" /> <Run Text="{Binding Path=Name, Mode=OneWay}" />
+                        </TextBlock>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type doc:Version}">
+                        <TextBlock>
+                            <Run Text="{Binding Converter={StaticResource fnConverter},Mode=OneWay}" Style="{StaticResource ItemType}" /><Run Style="{StaticResource ModifiedMark}" /> <Run Text="{Binding Path=Duration, StringFormat=g, Mode=OneWay}" />
+                        </TextBlock>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type doc:Track}">
+                        <TextBlock TextTrimming="WordEllipsis" MaxWidth="200">
+                            <Run Text="{Binding Converter={StaticResource fnConverter},Mode=OneWay}" Style="{StaticResource ItemType}" /><Run Style="{StaticResource ModifiedMark}" /> <Run Text="{Binding Mode=OneWay}" />
+                        </TextBlock>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type doc:Line}">
+                        <TextBlock>
+                            <Run Text="{Binding Converter={StaticResource fnConverter},Mode=OneWay}" Style="{StaticResource ItemType}" /><Run Style="{StaticResource ModifiedMark}" /> <Run Text="{Binding Mode=OneWay}" />
+                        </TextBlock>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type doc:LocalizedPackageParts}">
+                        <TextBlock>
+                            <Run Text="{Binding Converter={StaticResource fnConverter},Mode=OneWay}" Style="{StaticResource ItemType}" /><Run Style="{StaticResource ModifiedMark}" /> <Run Text="{Binding Path=Language}" />
+                        </TextBlock>
+                    </DataTemplate>
+                    <!-- 通用模板 -->
+                    <DataTemplate DataType="{x:Type docm:DataContainer}">
+                        <TextBlock>
+                            <Run Text="{Binding Converter={StaticResource fnConverter},Mode=OneWay}" Style="{StaticResource ItemType}" /><Run Style="{StaticResource ModifiedMark}" />
+                        </TextBlock>
+                    </DataTemplate>
+                </TreeView.Resources>
+            </TreeView>
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="5" Grid.RowSpan="2" />
+            <Frame Grid.Column="2" Name="EditorFrame" NavigationUIVisibility="Visible" Grid.Row="1" />
+            <TextBlock Grid.Column="2" Text="{Binding ElementName=EditorFrame, Path=Content.Title}" />
+        </Grid>
+        <ToolBarTray Name="ToolBarTray" Grid.Row="1" Visibility="{Binding ElementName=mnuViewToolBars, Path=IsChecked, Converter={StaticResource bvConverter}}">
+            <ToolBar Height="26" Name="ToolBar1">
+                <Button ToolTip="新建" Command="ApplicationCommands.New" Style="{StaticResource tb}">
+                    <Image Source="/LyricsEditor;component/Images/newHS.png" />
+                </Button>
+                <Button ToolTip="打开" Command="ApplicationCommands.Open" Style="{StaticResource tb}">
+                    <Image Source="/LyricsEditor;component/Images/openHS.png" />
+                </Button>
+                <Button ToolTip="保存" Command="ApplicationCommands.Save" Style="{StaticResource tb}">
+                    <Image Source="/LyricsEditor;component/Images/saveHS.png" />
+                </Button>
+                <Separator />
+                <Button ToolTip="检查文档" Command="{x:Static local:EditorCommands.CheckDocument}" Style="{StaticResource tb}">
+                    <Image Source="/LyricsEditor;component/Images/CheckHS.png" />
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
+        <Menu Name="Menu1">
+            <MenuItem Header="文件(_F)">
+                <MenuItem Header="新建(_N)" Command="ApplicationCommands.New" />
+                <MenuItem Header="打开(_O)..." Command="ApplicationCommands.Open" />
+                <MenuItem Header="保存(_S)" Command="ApplicationCommands.Save" />
+                <MenuItem Header="另存为(_A)..." Command="ApplicationCommands.SaveAs" />
+                <MenuItem Header="关闭(_E)" Command="ApplicationCommands.Close" />
+                <Separator />
+                <MenuItem Header="退出(_E)" Command="{x:Static local:EditorCommands.Exit}" />
+            </MenuItem>
+            <MenuItem Header="编辑(_E)" IsEnabled="False" IsChecked="False">
+            </MenuItem>
+            <MenuItem Header="视图(_V)">
+                <MenuItem Header="工具栏(_T)" IsCheckable="True" Name="mnuViewToolBars" IsChecked="True" />
+                <MenuItem Header="状态栏(_S)" IsCheckable="True" Name="mnuViewStatusBar" IsChecked="True" />
+            </MenuItem>
+            <MenuItem Header="工具(_T)">
+                <MenuItem Header="检查文档(_C)" Command="{x:Static local:EditorCommands.CheckDocument}" />
+            </MenuItem>
+            <MenuItem Header="窗口(_W)">
+                <MenuItem Header="新建窗口(_N)..." Command="{x:Static local:EditorCommands.NewWindow}" />
+            </MenuItem>
+            <MenuItem Header="帮助(_H)">
+                <MenuItem Header="关于(_A)" Command="{x:Static local:EditorCommands.About}"/>
+            </MenuItem>
+        </Menu>
+        <StatusBar Grid.Row="3" Height="23" Name="StatusBar" Visibility="{Binding ElementName=mnuViewStatusBar, Path=IsChecked, Converter={StaticResource bvConverter}}" />
+    </Grid>
+</Window>

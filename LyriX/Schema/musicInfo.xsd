@@ -1,0 +1,262 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema targetNamespace="LyriX/2011/package/musicInfo.xsd"
+    elementFormDefault="qualified"
+    xmlns="LyriX/2011/package/musicInfo.xsd"
+    xmlns:inf="LyriX/2011/package/musicInfo.xsd"
+    xmlns:com="LyriX/2011/package/common.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xml:lang="zh-cn"
+>
+  <xs:import namespace="LyriX/2011/package/common.xsd" />
+
+  <xs:annotation>
+    <xs:documentation>
+      <![CDATA[音乐信息（如流派、曲目编号、艺术家）的架构。]]>
+    </xs:documentation>
+  </xs:annotation>
+
+  <xs:element name="musicInfo" type="body" />
+
+  <xs:complexType name="body">
+    <xs:all>
+      <xs:element ref="com:tags" minOccurs="0" />
+      
+      <xs:element name="artists" type="artistCollection" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[参与创作的艺术家。]]>
+          </xs:documentation>
+        </xs:annotation>
+
+        <xs:unique name="uniqueArtistId">
+          <xs:selector xpath="*" />
+          <xs:field xpath="@id" />
+        </xs:unique>
+      </xs:element>
+      <xs:element name="genres" type="genreCollection" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[流派。]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="track" type="xs:nonNegativeInteger" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[曲目编号。]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="releaseYear" type="xs:short" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[发行时间（年份）。]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="title" type="xs:normalizedString" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[标题。]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="album" type="xs:normalizedString" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[专辑/电影名称。]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:complexType name="artistCollection">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[表示艺术家的集合。]]>
+      </xs:documentation>
+    </xs:annotation>
+
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="artist" type="Tartist" />
+      <xs:element name="artistGroup" type="TartistGroup" />
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="genreCollection">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[表示流派的集合。]]>
+      </xs:documentation>
+    </xs:annotation>
+
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="genre" type="xs:token">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[表示一个流派的名称。]]>
+          </xs:documentation>
+        </xs:annotation>
+        <!--
+流派名称均为英文通用格式。可能的值为（参见 http://www.id3.org/id3v2.4.0-frames）：
+Blues
+Classic Rock
+Country
+Dance
+Disco
+Funk
+Grunge
+Hip-Hop
+Jazz
+Metal
+New Age
+Oldies
+Other
+Pop
+R&B
+Rap
+Reggae
+Rock
+Techno
+Industrial
+Alternative
+Ska
+Death Metal
+Pranks
+Soundtrack
+Euro-Techno
+Ambient
+Trip-Hop
+Vocal
+Jazz+Funk
+Fusion
+Trance
+Classical
+Instrumental
+Acid
+House
+Game
+Sound Clip
+Gospel
+Noise
+AlternRock
+Bass
+Soul
+Punk
+Space
+Meditative
+Instrumental Pop
+Instrumental Rock
+Ethnic
+Gothic
+Darkwave
+Techno-Industrial
+Electronic
+Pop-Folk
+Eurodance
+Dream
+Southern Rock
+Comedy
+Cult
+Gangsta
+Top 40
+Christian Rap
+Pop/Funk
+Jungle
+Native American
+Cabaret
+New Wave
+Psychadelic
+Rave
+Showtunes
+Trailer
+Lo-Fi
+Tribal
+Acid Punk
+Acid Jazz
+Polka
+Retro
+Musical
+Rock & Roll
+Hard Rock
+        -->
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Tartist">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[表示一个艺术家的姓名等信息。]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:simpleContent>
+      <xs:extension base="xs:normalizedString">
+        <xs:attribute name="sex" type="com:sex">
+          <xs:annotation>
+            <xs:documentation>
+              <![CDATA[艺术家的性别，用于后期进一步确定歌词演唱者的详情以便处理歌词。]]>
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attributeGroup ref="baseArtistAttributes" />
+        <xs:attributeGroup ref="localizableArtistAttributes" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="TartistGroup">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[表示一个艺术家群组的名称等信息。其中的“群组”可以指一个乐队组合。]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:simpleContent>
+      <xs:extension base="xs:normalizedString">
+        <xs:attribute name="aids">
+          <xs:annotation>
+            <xs:documentation>
+              <![CDATA[艺术家群组的成员标识，其中的“成员”可以指艺术家，也可指艺术家群组，但要求列出的成员必须全部参与音乐创作或演出。必要时可以移去乐队组合的部分成员。]]>
+            </xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:list itemType="com:artistIndentifier" />
+          </xs:simpleType>
+        </xs:attribute>
+        <xs:attributeGroup ref="baseArtistAttributes" />
+        <xs:attributeGroup ref="localizableArtistAttributes" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:attributeGroup name="baseArtistAttributes">
+    <xs:attribute name="id" type="com:artistIndentifier">
+      <xs:annotation>
+        <xs:documentation>
+          <![CDATA[歌曲艺术家或是群组的标识，用于后期与部分进行关联，并确定相关信息的翻译。]]>
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="jobs">
+      <xs:annotation>
+        <xs:documentation>
+          <![CDATA[艺术家或是群组参与此歌曲的具体工作列表。]]>
+        </xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:list itemType="com:artistJob" />
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+
+  <xs:attributeGroup name="localizableArtistAttributes">
+    <xs:attribute name="characterName" type="xs:normalizedString">
+      <xs:annotation>
+        <xs:documentation>
+          <![CDATA[艺术家或是群组在此歌曲中的角色名称（如果有）。]]>
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:attributeGroup>
+</xs:schema>

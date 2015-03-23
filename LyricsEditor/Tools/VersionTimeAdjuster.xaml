@@ -1,0 +1,47 @@
+﻿<local:DataContainerEditor x:Class="VersionTimeAdjuster" x:TypeArguments="doc:Version"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:LyriX.LyricsEditor"
+      xmlns:doc="clr-namespace:LyriX.Document;assembly=LyriX"
+      mc:Ignorable="d"
+      d:DesignHeight="350" d:DesignWidth="300" EditorTitle="时间校准" DataContainerTitle="{Binding Path=Container.Duration}">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock TextWrapping="Wrap">
+            <Run Text="　　请选择要进行校准的歌词轨与歌词行，然后点击“下一步”继续。" /><LineBreak /><Run Text="注意：对不同轨中时间重叠的的歌词行不能同时校准。" />
+        </TextBlock>
+        <TextBlock Grid.Row="1" Text="轨：" />
+        <TextBlock Text="行：" Grid.Row="3" />
+        <ListBox Grid.Row="2" Name="TrackList" ItemTemplate="{StaticResource CheckBoxItemTemplate}" ItemsSource="{Binding Path=Container.Tracks}" SelectionMode="Multiple">
+            <ListBox.Resources>
+                <Style TargetType="ListBoxItem">
+                    <Style.Setters>
+                        <Setter Property="MaxWidth" Value="500" />
+                    </Style.Setters>
+                </Style>
+            </ListBox.Resources>
+        </ListBox>
+        <ListBox Name="LineList" Grid.Row="4" ItemTemplate="{StaticResource CheckBoxItemTemplate}" SelectionMode="Multiple" />
+        <TextBlock Text="　　由于条件限制，您需要提供用于校准时播放的音乐文件。" Grid.Row="5" TextWrapping="Wrap" />
+        <TextBlock Grid.Row="6" TextWrapping="Wrap">
+            <Span BaselineAlignment="Center">
+                <Run Text="音乐文件：" />
+                <Run Name="MusicSrcText" />
+                <Button Content="浏览(_B)..." Name="BrowseMusicButton" />
+            </Span>
+        </TextBlock>
+        <Button Content="下一步" Height="23" HorizontalAlignment="Right" IsDefault="True" Name="OKButton" VerticalAlignment="Center" Width="75" Grid.Row="7" IsEnabled="False" />
+        <CheckBox Content="由文件设置版本音乐时长(_F)" Grid.Row="7" Height="16" HorizontalAlignment="Right" Margin="0,4,81,0" Name="ApplyDurationCheckbox" VerticalAlignment="Top" IsChecked="True" />
+    </Grid>
+</local:DataContainerEditor>

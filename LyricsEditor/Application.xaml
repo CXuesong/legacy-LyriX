@@ -1,0 +1,203 @@
+﻿<Application x:Class="Application"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:LyriX.LyricsEditor"
+    xmlns:ui="clr-namespace:LyriX.Players.UI;assembly=PlayersUI"
+    ShutdownMode="OnLastWindowClose">
+    <Application.Resources>
+
+        <local:FriendlyNameConverter x:Key="fnConverter" />
+        <BooleanToVisibilityConverter x:Key="bvConverter" />
+        <local:NullableValueConverter x:Key="nvConverter" />
+        <local:EnumValuesConverter x:Key="evConverter" />
+        <local:LocalizationCompletionRateConverter x:Key="lcrConverter" />
+
+        <!-- 用于标识未本地化的文本 -->
+        <Style x:Key="UnlocalizedField">
+            <Setter Property="Control.Foreground" Value="Gray" />
+        </Style>
+        
+        <Style x:Key="SpanSplitLocator" TargetType="TextBox">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="IsReadOnly" Value="True" />
+            <Setter Property="IsReadOnlyCaretVisible" Value="True" />
+            <Setter Property="ToolTip" Value="点击以确定拆分位置。" />
+        </Style>
+        
+        <Style x:Key="tb" TargetType="{x:Type Button}">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.4" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <ContextMenu x:Key="DataGridContextMenu">
+            <MenuItem Header="插入(_I)" Command="{x:Static local:EditorCommands.Insert}" />
+            <MenuItem Header="删除(_R)" Command="{x:Static DataGrid.DeleteCommand}" />
+            <Separator />
+            <MenuItem Header="全选(_A)" Command="{x:Static DataGrid.SelectAllCommand}" />
+        </ContextMenu>
+
+        <Style x:Key="DataContainerGrid" TargetType="DataGrid">
+            <Style.Setters>
+                <!--Setter Property="ContextMenu" Value="{StaticResource DataGridContextMenu}" /-->
+                <Setter Property="HorizontalGridLinesBrush" Value="LightBlue" />
+            </Style.Setters>
+        </Style>
+
+        <Style x:Key="ClearButton" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Button Name="ButtonBack" Height="23" ToolTip="重置" Style="{StaticResource tb}">
+                            <Image Source="/LyricsEditor;component/Images/erase.png" />
+                        </Button>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="NullableField" TargetType="TextBox">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <TextBox Name="InputBox"
+                                     Text="{Binding RelativeSource={RelativeSource TemplatedParent},
+                                            Path=DataContext, Converter={StaticResource nvConverter}}" />
+                            <Button Name="ClearButton" 
+                                    Style="{StaticResource ClearButton}"
+                                    Grid.ColumnSpan="1" Grid.Column="1"
+                                    Click="ClearButton_Click" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self},Path=DataContext}" Value="{x:Null}">
+                                <Setter TargetName="ClearButton" Property="IsEnabled" Value="False" />
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="TextBox">
+            <!-- 无法报告错误 信息 -->
+            <!--Setter Property="Validation.ErrorTemplate" /-->
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <!-- 使用工具提示报告错误信息 -->
+                    <Setter Property="ToolTip"
+                            Value="{Binding RelativeSource={RelativeSource Self},
+                        Path=(Validation.Errors)/ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- 带复选框的列表项 -->
+        <DataTemplate x:Key="CheckBoxItemTemplate">
+            <CheckBox Content="{Binding}"
+                      Focusable="False"
+                      IsHitTestVisible="False"
+                      IsChecked="{Binding RelativeSource={RelativeSource FindAncestor,
+                                            AncestorType=ListBoxItem}, Path=IsSelected}"
+                      Foreground="{Binding RelativeSource={RelativeSource FindAncestor,
+                                            AncestorType=ListBoxItem}, Path=Foreground}" />
+        </DataTemplate>
+
+        <!-- 预定义的流派 -->
+        <XmlDataProvider x:Key="GenresProvider">
+            <x:XData xmlns="">
+                <genres>
+                    <genre>Blues</genre>
+                    <genre>Classic Rock</genre>
+                    <genre>Country</genre>
+                    <genre>Dance</genre>
+                    <genre>Disco</genre>
+                    <genre>Funk</genre>
+                    <genre>Grunge</genre>
+                    <genre>Hip-Hop</genre>
+                    <genre>Jazz</genre>
+                    <genre>Metal</genre>
+                    <genre>New Age</genre>
+                    <genre>Oldies</genre>
+                    <genre>Other</genre>
+                    <genre>Pop</genre>
+                    <genre>R&amp;B</genre>
+                    <genre>Rap</genre>
+                    <genre>Reggae</genre>
+                    <genre>Rock</genre>
+                    <genre>Techno</genre>
+                    <genre>Industrial</genre>
+                    <genre>Alternative</genre>
+                    <genre>Ska</genre>
+                    <genre>Death Metal</genre>
+                    <genre>Pranks</genre>
+                    <genre>Soundtrack</genre>
+                    <genre>Euro-Techno</genre>
+                    <genre>Ambient</genre>
+                    <genre>Trip-Hop</genre>
+                    <genre>Vocal</genre>
+                    <genre>Jazz+Funk</genre>
+                    <genre>Fusion</genre>
+                    <genre>Trance</genre>
+                    <genre>Classical</genre>
+                    <genre>Instrumental</genre>
+                    <genre>Acid</genre>
+                    <genre>House</genre>
+                    <genre>Game</genre>
+                    <genre>Sound Clip</genre>
+                    <genre>Gospel</genre>
+                    <genre>Noise</genre>
+                    <genre>AlternRock</genre>
+                    <genre>Bass</genre>
+                    <genre>Soul</genre>
+                    <genre>Punk</genre>
+                    <genre>Space</genre>
+                    <genre>Meditative</genre>
+                    <genre>Instrumental Pop</genre>
+                    <genre>Instrumental Rock</genre>
+                    <genre>Ethnic</genre>
+                    <genre>Gothic</genre>
+                    <genre>Darkwave</genre>
+                    <genre>Techno-Industrial</genre>
+                    <genre>Electronic</genre>
+                    <genre>Pop-Folk</genre>
+                    <genre>Eurodance</genre>
+                    <genre>Dream</genre>
+                    <genre>Southern Rock</genre>
+                    <genre>Comedy</genre>
+                    <genre>Cult</genre>
+                    <genre>Gangsta</genre>
+                    <genre>Top 40</genre>
+                    <genre>Christian Rap</genre>
+                    <genre>Pop/Funk</genre>
+                    <genre>Jungle</genre>
+                    <genre>Native American</genre>
+                    <genre>Cabaret</genre>
+                    <genre>New Wave</genre>
+                    <genre>Psychadelic</genre>
+                    <genre>Rave</genre>
+                    <genre>Showtunes</genre>
+                    <genre>Trailer</genre>
+                    <genre>Lo-Fi</genre>
+                    <genre>Tribal</genre>
+                    <genre>Acid Punk</genre>
+                    <genre>Acid Jazz</genre>
+                    <genre>Polka</genre>
+                    <genre>Retro</genre>
+                    <genre>Musical</genre>
+                    <genre>Rock &amp; Roll</genre>
+                    <genre>Hard Rock</genre>
+                </genres>
+            </x:XData>
+        </XmlDataProvider>
+    </Application.Resources>
+</Application>

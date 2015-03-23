@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="header"
+    targetNamespace="LyriX/2011/package/header.xsd"
+    elementFormDefault="qualified"
+    xmlns="LyriX/2011/package/header.xsd"
+    xmlns:hdr="LyriX/2011/package/header.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:com="LyriX/2011/package/common.xsd"
+    xml:lang="zh-cn"
+>
+  <xs:import namespace="LyriX/2011/package/common.xsd" />
+
+  <xs:annotation>
+    <xs:documentation>
+      <![CDATA[LyriX 包的基本信息。]]>
+    </xs:documentation>
+  </xs:annotation>
+
+  <xs:element name="header" type="body" />
+
+  <xs:complexType name="body">
+    <xs:all>
+      <xs:element ref="com:tags" minOccurs="0" />
+      <xs:element name="application" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[创建此部分的应用程序名称等信息。]]>
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:token">
+              <xs:attribute name="version" type="xs:token">
+                <xs:annotation>
+                  <xs:documentation>
+                    <![CDATA[应用程序版本。]]>
+                  </xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="author" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[作者的姓名等信息。]]>
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:normalizedString">
+              <xs:attribute name="contact" type="xs:normalizedString">
+                <xs:annotation>
+                  <xs:documentation>
+                    <![CDATA[作者的联系信息。]]>
+                  </xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="revision" type="xs:nonNegativeInteger" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[此文件的修订次数。]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="comments" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[此文件作者留下的注释。]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="language" type="com:language" default="" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[此文档使用的默认语言。用于确定歌词与歌曲信息的语言默认值。]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+</xs:schema>

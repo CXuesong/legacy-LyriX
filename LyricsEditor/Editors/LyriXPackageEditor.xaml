@@ -1,0 +1,133 @@
+﻿<local:DataContainerEditor x:Class="LyriXPackageEditor" x:TypeArguments="doc:LyriXPackage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:LyriX.LyricsEditor"
+      xmlns:doc="clr-namespace:LyriX.Document;assembly=LyriX"
+      mc:Ignorable="d"
+      d:DesignHeight="350" d:DesignWidth="300" EditorTitle="文档" DataContainerTitle="{Binding Path=Document.Title}">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="0.8*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MaxWidth="100" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        <GroupBox Grid.ColumnSpan="2">
+            <GroupBox.Header>
+                <TextBlock><Run Text="头信息　" /> <Hyperlink Click="Hyperlinks_Click" Tag="h">编辑</Hyperlink></TextBlock>
+            </GroupBox.Header>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition MaxWidth="100" Width="*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.ColumnSpan="2" Text="{Binding Path=Document}" FontSize="14" FontWeight="Bold" TextWrapping="Wrap" />
+                <TextBlock FontSize="12" Text="{Binding Path=Document.IOContext}" Grid.ColumnSpan="2" Grid.Row="1" TextWrapping="Wrap" />
+                <TextBlock Text="修订：" TextAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Center" Grid.Row="2" />
+                <TextBlock Grid.Column="1" Grid.Row="2">
+                    <Run Text="{Binding Path=Container.Header.Revision}" />
+                    <Run Text="次" />
+                </TextBlock>
+                <TextBlock Text="作者：" TextAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Center" Grid.Row="3" />
+                <TextBlock Grid.Column="1" Text="{Binding Path=Container.Header.AuthorName}" Grid.Row="3" />
+                <TextBlock Text="联系方式：" TextAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Center" Grid.Row="4" />
+                <TextBlock Grid.Column="1" Text="{Binding Path=Container.Header.AuthorContact}" Grid.Row="4" />
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.ColumnSpan="2" Grid.Row="1">
+            <GroupBox.Header>
+                <TextBlock><Run Text="歌曲信息　" /> <Hyperlink Click="Hyperlinks_Click" Tag="i">编辑</Hyperlink></TextBlock>
+            </GroupBox.Header>
+            <Grid DataContext="{Binding Path=Container.MusicInfo}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition MaxWidth="100" Width="*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="专辑：" TextAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Text="{Binding Path=Album}" />
+                <TextBlock Grid.Row="1" Text="标题：" TextAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Path=Title}" />
+                <TextBlock Grid.Row="3" Text="参与创作的艺术家：" TextAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Center" />
+                <ListView Grid.Column="1" Grid.Row="3" ItemsSource="{Binding Path=Artists}" Name="ArtistList">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="名称" DisplayMemberBinding="{Binding Path=Name}" />
+                            <GridViewColumn Header="角色名称" DisplayMemberBinding="{Binding Path=CharacterName}" />
+                            <GridViewColumn Header="担任职务" DisplayMemberBinding="{Binding Path=Jobs, Converter={StaticResource fnConverter}}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.ColumnSpan="2" Grid.Row="2">
+            <GroupBox.Header>
+                <TextBlock><Run Text="歌词信息　" /> <Hyperlink Click="Hyperlinks_Click" Tag="ly">编辑</Hyperlink></TextBlock>
+            </GroupBox.Header>
+            <Grid DataContext="{Binding Path=Container.Lyrics}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition MaxWidth="100" Width="*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="版本：" TextAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Center" />
+                <ListView Grid.Column="1" ItemsSource="{Binding Path=Versions}" Name="VersionList">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=Duration, StringFormat=g}" Header="歌曲时间" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=Deviation, StringFormat=g}" Header="允许误差" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Path=Language, Converter={StaticResource nvConverter}}" Header="语言" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <TextBlock Text="行总数：" TextAlignment="Right" TextWrapping="Wrap" VerticalAlignment="Center" Grid.Row="1" />
+                <TextBlock Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Center" Name="LinesCount" Grid.Row="1" />
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.ColumnSpan="2" Grid.Row="3">
+            <GroupBox.Header>
+                <TextBlock><Run Text="本地化　" /> <Hyperlink Click="Hyperlinks_Click" Tag="lo">编辑</Hyperlink></TextBlock>
+            </GroupBox.Header>
+            <Grid DataContext="{Binding Path=Container.LocalizedParts}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <ListView ItemsSource="{Binding Path=Items}" Name="LocalizedPartsList">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="语言" DisplayMemberBinding="{Binding Path=Language}" />
+                            <GridViewColumn Header="标题" DisplayMemberBinding="{Binding Path=MusicInfo.Title}" />
+                            <GridViewColumn Header="本地化进度" DisplayMemberBinding="{Binding Converter={StaticResource lcrConverter}, StringFormat=p1}" />
+                            <GridViewColumn Header="艺术家" DisplayMemberBinding="{Binding Path=MusicInfo.Artists.Count}" />
+                            <GridViewColumn Header="歌词行" DisplayMemberBinding="{Binding Path=Lyrics.Lines.Count}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</local:DataContainerEditor>
